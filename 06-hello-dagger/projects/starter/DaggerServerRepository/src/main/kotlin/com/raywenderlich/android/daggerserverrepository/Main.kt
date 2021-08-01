@@ -33,11 +33,13 @@
  */
 package com.raywenderlich.android.daggerserverrepository
 
+import com.raywenderlich.android.daggerserverrepository.di.DaggerAppComponent
+
 fun main() {
     // 1
-    // val server = DaggerAppComponent // project doesn't recognize generated class
-    //     .create()
-    //     .server()
-    // // 2
-    // server.receive(Data("Hello"))
+     val server = DaggerAppComponent // project doesn't recognize generated class
+         .create()
+         .server()
+     // 2
+     server.receive(Data("Hello"))
 }
