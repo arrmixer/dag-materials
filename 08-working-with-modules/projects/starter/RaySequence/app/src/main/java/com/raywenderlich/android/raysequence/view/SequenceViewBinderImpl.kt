@@ -42,8 +42,10 @@ import android.widget.TextView
 import com.raywenderlich.android.raysequence.MainActivity
 import com.raywenderlich.android.raysequence.R
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /** SequenceViewBinder implementation */
+@Singleton
 class SequenceViewBinderImpl @Inject constructor(
     private val sequenceViewListener: SequenceViewBinder.Listener
 ) : SequenceViewBinder {
@@ -53,6 +55,7 @@ class SequenceViewBinderImpl @Inject constructor(
   }
 
   private lateinit var output: TextView
+
   override fun showNextValue(nextValue: Int) {
     output.text = "$nextValue"
   }
