@@ -34,12 +34,38 @@
 package com.raywenderlich.android.raysequence
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.raywenderlich.android.raysequence.di.DaggerAppComponent
+import com.raywenderlich.android.raysequence.presenter.SequencePresenter
+import com.raywenderlich.android.raysequence.view.SequenceViewBinder
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
+  // 1
+  @Inject
+  lateinit var presenter: SequencePresenter
+  // 2
+  @Inject
+  lateinit var viewBinder: SequenceViewBinder
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    DaggerAppComponent.create().inject(this)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+    // 3
+    viewBinder.init(this)
+  }
+
+  // 4
+  override fun onStart() {
+    super.onStart()
+    presenter.bind(viewBinder)
+  }
+
+  // 5
+  override fun onStop() {
+    presenter.unbind()
+    super.onStop()
   }
 }

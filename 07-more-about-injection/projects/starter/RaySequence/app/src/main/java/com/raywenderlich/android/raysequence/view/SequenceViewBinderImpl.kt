@@ -36,15 +36,23 @@
 
 package com.raywenderlich.android.raysequence.view
 
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import com.raywenderlich.android.raysequence.MainActivity
 import com.raywenderlich.android.raysequence.R
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /** SequenceViewBinder implementation */
-class SequenceViewBinderImpl(
+@Singleton
+class SequenceViewBinderImpl @Inject constructor(
     private val sequenceViewListener: SequenceViewBinder.Listener
 ) : SequenceViewBinder {
+
+  init {
+    Log.d("DAGGER_LOG", "Listener: $sequenceViewListener")
+  }
 
   private lateinit var output: TextView
 
