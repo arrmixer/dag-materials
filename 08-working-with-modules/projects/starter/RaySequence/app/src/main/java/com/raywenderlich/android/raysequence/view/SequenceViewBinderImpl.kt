@@ -63,7 +63,7 @@ class SequenceViewBinderImpl @Inject constructor(
   override fun init(rootView: MainActivity) {
     output = rootView.findViewById(R.id.sequence_output_textview)
     rootView.findViewById<Button>(R.id.next_value_button).setOnClickListener {
-      sequenceViewListener?.onNextValuePressed()
+      sequenceViewListener.onNextValuePressed()
     }
   }
 }

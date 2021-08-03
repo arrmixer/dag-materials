@@ -40,8 +40,11 @@ import com.raywenderlich.android.mvp.impl.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class BusArrivalPresenterImpl constructor(
+@Singleton
+class BusArrivalPresenterImpl @Inject constructor(
     private val bussoEndpoint: BussoEndpoint
 ) : BasePresenter<View, BusArrivalViewBinder>(),
     BusArrivalPresenter {

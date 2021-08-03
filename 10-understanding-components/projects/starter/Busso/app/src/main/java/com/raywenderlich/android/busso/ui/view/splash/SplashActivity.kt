@@ -38,7 +38,10 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.raywenderlich.android.busso.R
-import com.raywenderlich.android.busso.di.injectors.SplashActivityInjector
+import com.raywenderlich.android.busso.di.AppModule
+import com.raywenderlich.android.busso.di.DaggerAppComponent
+import com.raywenderlich.android.busso.di.NetworkModule
+import javax.inject.Inject
 
 /**
  * Splash Screen with the app icon and name at the center, this is also the launch screen and
@@ -47,14 +50,20 @@ import com.raywenderlich.android.busso.di.injectors.SplashActivityInjector
  */
 class SplashActivity : AppCompatActivity() {
 
+  @Inject
   lateinit var splashViewBinder: SplashViewBinder
+  @Inject
   lateinit var splashPresenter: SplashPresenter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     makeFullScreen()
     setContentView(R.layout.activity_splash)
-    SplashActivityInjector.inject(this)
+    DaggerAppComponent
+      .factory()
+      .create(this)
+      .inject(this)
+
     splashViewBinder.init(this)
   }
 

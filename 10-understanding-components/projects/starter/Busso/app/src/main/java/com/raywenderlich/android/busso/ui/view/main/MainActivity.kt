@@ -33,21 +33,36 @@
  */
 package com.raywenderlich.android.busso.ui.view.main
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.raywenderlich.android.busso.R
-import com.raywenderlich.android.busso.di.injectors.MainActivityInjector
+import com.raywenderlich.android.busso.di.AppComponent
+import com.raywenderlich.android.busso.di.AppModule
+import com.raywenderlich.android.busso.di.DaggerAppComponent
+import com.raywenderlich.android.busso.di.NetworkModule
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
+  lateinit var comp: AppComponent
+
+  @Inject
   lateinit var mainPresenter: MainPresenter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    MainActivityInjector.inject(this)
+    comp = DaggerAppComponent
+      .factory()
+      .create(this).apply {
+        inject(this@MainActivity)
+      }
     if (savedInstanceState == null) {
       mainPresenter.goToBusStopList()
     }
   }
 }
+
+val Context.comp: AppComponent?
+  get() = if (this is MainActivity) comp else null
