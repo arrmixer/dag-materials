@@ -35,6 +35,7 @@ package com.raywenderlich.android.raysequence
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.raywenderlich.android.raysequence.di.ContextModule
 import com.raywenderlich.android.raysequence.di.DaggerAppComponent
 import com.raywenderlich.android.raysequence.presenter.SequencePresenter
 import com.raywenderlich.android.raysequence.view.SequenceViewBinder
@@ -49,7 +50,11 @@ class MainActivity : AppCompatActivity() {
   lateinit var viewBinder: SequenceViewBinder
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    DaggerAppComponent.create().inject(this)
+    DaggerAppComponent
+      .builder()
+      .contextModule(ContextModule(this))
+      .build()
+      .inject(this)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     viewBinder.init(this)

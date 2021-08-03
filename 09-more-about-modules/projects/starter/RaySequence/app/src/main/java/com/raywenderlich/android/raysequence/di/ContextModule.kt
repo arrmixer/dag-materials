@@ -34,27 +34,15 @@
  *
  */
 
-package com.raywenderlich.android.raysequence.model
+package com.raywenderlich.android.raysequence.di
 
-import com.raywenderlich.android.raysequence.conf.Config
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import android.content.Context
+import dagger.Module
+import dagger.Provides
 
-class NaturalSequenceGeneratorTest {
+@Module
+class ContextModule(val context: Context) { // HERE
 
-  @Test
-  fun `test natural sequence value`() {
-    val naturalSequenceIterator = NaturalSequenceGenerator(Config(0))
-    listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10).forEach {
-      assertEquals(it, naturalSequenceIterator.next())
-    }
-  }
-
-  @Test
-  fun `test natural sequence value starting in diffenet value`() {
-    val naturalSequenceIterator = NaturalSequenceGenerator(Config(10))
-    listOf(10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20).forEach {
-      assertEquals(it, naturalSequenceIterator.next())
-    }
-  }
+    @Provides
+    fun provideContext(): Context = context
 }

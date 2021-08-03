@@ -36,16 +36,35 @@
 
 package com.raywenderlich.android.raysequence.di
 
+import com.raywenderlich.android.raysequence.conf.Config
+import com.raywenderlich.android.raysequence.model.FibonacciSequenceGenerator
 import com.raywenderlich.android.raysequence.model.NaturalSequenceGenerator
 import com.raywenderlich.android.raysequence.model.SequenceGenerator
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import javax.inject.Named
 
 @Module(includes = [AppBindings::class])
-object AppModule {
+interface AppModule {
 
-  @Provides
-  fun provideSequenceGenerator(): SequenceGenerator<Int> =
-      NaturalSequenceGenerator(0)
+    companion object {
+        @Provides
+        @JvmStatic
+        fun provideConfig(): Config = Config(0)
+    }
+
+    @Binds
+    @NaturalSequence
+    fun bindsNaturalSequenceGenerator(impl: NaturalSequenceGenerator): SequenceGenerator<Int>
+
+    @Binds
+    @FibonacciSequence
+    fun bindsFibonacciSequenceGenerator(impl: FibonacciSequenceGenerator):
+        SequenceGenerator<Int>
 }
+
+
+
+
 

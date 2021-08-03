@@ -34,27 +34,6 @@
  *
  */
 
-package com.raywenderlich.android.raysequence.model
+package com.raywenderlich.android.raysequence.conf
 
-import com.raywenderlich.android.raysequence.conf.Config
-import org.junit.Assert.assertEquals
-import org.junit.Test
-
-class NaturalSequenceGeneratorTest {
-
-  @Test
-  fun `test natural sequence value`() {
-    val naturalSequenceIterator = NaturalSequenceGenerator(Config(0))
-    listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10).forEach {
-      assertEquals(it, naturalSequenceIterator.next())
-    }
-  }
-
-  @Test
-  fun `test natural sequence value starting in diffenet value`() {
-    val naturalSequenceIterator = NaturalSequenceGenerator(Config(10))
-    listOf(10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20).forEach {
-      assertEquals(it, naturalSequenceIterator.next())
-    }
-  }
-}
+data class Config(val startValue: Int)

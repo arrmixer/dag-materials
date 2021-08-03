@@ -36,8 +36,16 @@
 
 package com.raywenderlich.android.raysequence.model
 
+import com.raywenderlich.android.raysequence.conf.Config
+import javax.inject.Inject
+import javax.inject.Named
+
 /** SequenceGenerator for natural sequence */
-class NaturalSequenceGenerator(private var start: Int) : SequenceGenerator<Int> {
+class NaturalSequenceGenerator @Inject constructor(
+  config: Config // 1
+) : SequenceGenerator<Int> {
+
+  private var start = config.startValue // 2
 
   override fun next(): Int = start++
 }
