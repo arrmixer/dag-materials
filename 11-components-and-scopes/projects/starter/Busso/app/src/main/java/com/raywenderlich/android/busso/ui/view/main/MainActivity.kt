@@ -37,8 +37,9 @@ import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.raywenderlich.android.busso.R
-import com.raywenderlich.android.busso.di.AppComponent
-import com.raywenderlich.android.busso.di.DaggerAppComponent
+import com.raywenderlich.android.busso.appComp
+import com.raywenderlich.android.busso.di.ActivityComponent
+import com.raywenderlich.android.busso.di.DaggerActivityComponent
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -46,14 +47,14 @@ class MainActivity : AppCompatActivity() {
   @Inject
   lateinit var mainPresenter: MainPresenter
 
-  lateinit var comp: AppComponent
+  lateinit var comp: ActivityComponent
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    comp = DaggerAppComponent
+    comp = DaggerActivityComponent
         .factory()
-        .create(this).apply {
+        .create(this, this.application.appComp).apply {
           inject(this@MainActivity)
         }
     if (savedInstanceState == null) {
@@ -62,5 +63,5 @@ class MainActivity : AppCompatActivity() {
   }
 }
 
-val Context.comp: AppComponent?
-  get() = if (this is MainActivity) comp else null
+val Context.activityComp: ActivityComponent
+  get() = (this as MainActivity).comp

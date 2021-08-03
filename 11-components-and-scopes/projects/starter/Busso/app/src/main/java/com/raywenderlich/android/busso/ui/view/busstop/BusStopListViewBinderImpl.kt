@@ -39,6 +39,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.raywenderlich.android.busso.R
+import com.raywenderlich.android.busso.di.scopes.FragmentScope
 import com.raywenderlich.android.busso.ui.events.OnItemSelectedListener
 import javax.inject.Inject
 
@@ -78,7 +79,7 @@ class BusStopListViewBinderImpl @Inject constructor(
         msg,
         Snackbar.LENGTH_LONG
     ).setAction(R.string.message_retry) {
-      busStopItemSelectedListener?.retry()
+      busStopItemSelectedListener.retry()
     }.show()
   }
 }
