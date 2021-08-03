@@ -42,7 +42,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.raywenderlich.android.busso.R
 import com.raywenderlich.android.busso.appComp
-import com.raywenderlich.android.busso.di.DaggerFragmentComponent
 import com.raywenderlich.android.busso.ui.view.main.activityComp
 import javax.inject.Inject
 
@@ -51,43 +50,41 @@ import javax.inject.Inject
  */
 class BusStopFragment : Fragment() {
 
-  @Inject
-  lateinit var busStopListViewBinder: BusStopListViewBinder
+    @Inject
+    lateinit var busStopListViewBinder: BusStopListViewBinder
 
-  @Inject
-  lateinit var busStopListPresenter: BusStopListPresenter
+    @Inject
+    lateinit var busStopListPresenter: BusStopListPresenter
 
-  override fun onAttach(context: Context) {
-    with(context) {
-      DaggerFragmentComponent.factory()
-          .create(applicationContext.appComp, activityComp)
-          .inject(this@BusStopFragment)
+    override fun onAttach(context: Context) {
+        context.activityComp
+            .fragmentComponent()
+            .inject(this)
+        super.onAttach(context)
     }
-    super.onAttach(context)
-  }
 
-  override fun onCreateView(
-      inflater: LayoutInflater,
-      container: ViewGroup?,
-      savedInstanceState: Bundle?
-  ): View? = inflater.inflate(R.layout.fragment_busstop_layout, container, false).apply {
-    busStopListViewBinder.init(this)
-  }
-
-
-  override fun onStart() {
-    super.onStart()
-    with(busStopListPresenter) {
-      bind(busStopListViewBinder)
-      start()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_busstop_layout, container, false).apply {
+        busStopListViewBinder.init(this)
     }
-  }
 
-  override fun onStop() {
-    with(busStopListPresenter) {
-      stop()
-      unbind()
+
+    override fun onStart() {
+        super.onStart()
+        with(busStopListPresenter) {
+            bind(busStopListViewBinder)
+            start()
+        }
     }
-    super.onStop()
-  }
+
+    override fun onStop() {
+        with(busStopListPresenter) {
+            stop()
+            unbind()
+        }
+        super.onStop()
+    }
 }

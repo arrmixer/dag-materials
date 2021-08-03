@@ -39,7 +39,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.raywenderlich.android.busso.R
 import com.raywenderlich.android.busso.appComp
 import com.raywenderlich.android.busso.di.ActivityComponent
-import com.raywenderlich.android.busso.di.DaggerActivityComponent
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -52,9 +51,10 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    comp = DaggerActivityComponent
-        .factory()
-        .create(this, this.application.appComp)
+    comp = application.appComp
+        .activityComponentBuilder()
+        .activity(this)
+        .build()
         .apply {
           inject(this@MainActivity)
         }

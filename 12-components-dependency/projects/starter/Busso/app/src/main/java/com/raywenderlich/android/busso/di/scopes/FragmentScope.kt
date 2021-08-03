@@ -34,6 +34,7 @@
 
 package com.raywenderlich.android.busso.di.scopes
 
+import dagger.Reusable
 import javax.inject.Scope
 import kotlin.annotation.AnnotationRetention.RUNTIME
 

@@ -41,10 +41,10 @@ import com.raywenderlich.android.busso.ui.view.splash.SplashActivity
 import com.raywenderlich.android.ui.navigation.Navigator
 import dagger.BindsInstance
 import dagger.Component
+import dagger.Subcomponent
 
-@Component(
+@Subcomponent(
     modules = [ActivityModule::class],
-    dependencies = [ApplicationComponent::class]
 )
 @ActivityScope
 interface ActivityComponent {
@@ -53,13 +53,23 @@ interface ActivityComponent {
 
   fun inject(activity: MainActivity)
 
-  fun navigator(): Navigator
+  fun fragmentComponent(): FragmentComponent
 
-  @Component.Factory
-  interface Factory {
-    fun create(
-        @BindsInstance activity: Activity,
-        applicationComponent: ApplicationComponent
-    ): ActivityComponent
-  }
+    // @Subcomponent.Factory // 1
+    // interface Factory {
+    //     fun create(
+    //         @BindsInstance activity: Activity
+    //         // 2
+    //     ): ActivityComponent
+    // }
+
+    @Subcomponent.Builder // 1
+    interface Builder {
+        // 2
+        fun activity(
+            @BindsInstance activity: Activity
+        ): Builder
+        // 3
+        fun build(): ActivityComponent
+    }
 }

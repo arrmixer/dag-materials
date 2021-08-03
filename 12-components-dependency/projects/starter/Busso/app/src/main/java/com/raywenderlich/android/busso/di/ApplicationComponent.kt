@@ -35,6 +35,7 @@
 package com.raywenderlich.android.busso.di
 
 import android.app.Application
+import com.raywenderlich.android.busso.di.scopes.ApplicationScope
 import com.raywenderlich.android.busso.network.BussoEndpoint
 import com.raywenderlich.android.location.api.model.LocationEvent
 import dagger.BindsInstance
@@ -43,12 +44,12 @@ import io.reactivex.Observable
 import javax.inject.Singleton
 
 @Component(modules = [ApplicationModule::class])
-@Singleton
+@ApplicationScope
 interface ApplicationComponent {
 
-  fun locationObservable(): Observable<LocationEvent>
+  // fun activityComponentFactory(): ActivityComponent.Factory
 
-  fun bussoEndpoint(): BussoEndpoint
+  fun activityComponentBuilder(): ActivityComponent.Builder
 
   @Component.Factory
   interface Factory {
