@@ -32,16 +32,13 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.busso.plugins.wether.endpoint
+package com.raywenderlich.android.busso.plugins.api
 
-import com.raywenderlich.android.busso.plugins.model.InfoMessage
-import com.raywenderlich.android.location.api.model.GeoLocation
-import io.reactivex.Single
-import javax.inject.Inject
+import dagger.MapKey
+import kotlin.reflect.KClass
 
-class WeatherInformationEndpointImpl @Inject constructor(
-    private val weatherEndpoint: WeatherEndpoint
-) : WeatherInformationEndpoint {
-  override fun fetchInformation(location: GeoLocation): Single<InfoMessage> =
-      weatherEndpoint.fetchWeatherCondition(location.latitude, location.longitude)
-}
+@MapKey(unwrapValue = false) // 1
+annotation class ComplexInfoKey(
+    val endpointClass: @JvmSuppressWildcards KClass<out InformationEndpoint>, // 2
+    val name: String // 2
+)

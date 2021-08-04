@@ -35,45 +35,26 @@
 package com.raywenderlich.android.busso.plugins.whereami.di
 
 import com.raywenderlich.android.busso.di.scopes.ApplicationScope
-import com.raywenderlich.android.busso.plugins.api.InformationEndpoint
+import com.raywenderlich.android.busso.plugins.api.ComplexInfoKey
 import com.raywenderlich.android.busso.plugins.api.InformationPluginSpec
+import com.raywenderlich.android.busso.plugins.api.SimpleInfoKey
 import com.raywenderlich.android.busso.plugins.whereami.endpoint.MyLocationEndpoint
-import com.raywenderlich.android.busso.plugins.whereami.endpoint.WhereAmIEndpoint
-import com.raywenderlich.android.busso.plugins.whereami.endpoint.WhereAmIEndpointImpl
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import retrofit2.Retrofit
-import javax.inject.Named
+import dagger.multibindings.ClassKey
+import dagger.multibindings.IntoMap
 
 const val WHEREAMI_INFO_NAME = "WhereAmI"
 
-@Module(includes = [WhereAmIModule.Bindings::class])
+@Module
 object WhereAmIModule {
 
-  @Provides
-  @ApplicationScope
-  fun provideMyLocationEndpoint(retrofit: Retrofit): MyLocationEndpoint {
-    return retrofit.create(MyLocationEndpoint::class.java)
-  }
-
-  @Provides
-  @ApplicationScope
-  @Named(WHEREAMI_INFO_NAME) // 3
-  fun provideWhereAmISpec(endpoint: WhereAmIEndpointImpl): InformationPluginSpec =
-      object : InformationPluginSpec {
-        override val informationEndpoint: InformationEndpoint
-          get() = endpoint
-        override val serviceName: String
-          get() = WHEREAMI_INFO_NAME
-      }
-
-  @Module
-  interface Bindings {
-
-    @Binds
-    fun bindWhereAmIEndpoint(
-        impl: WhereAmIEndpointImpl
-    ): WhereAmIEndpoint
-  }
+    @Provides
+    @ApplicationScope
+    @IntoMap
+    @ComplexInfoKey(
+        MyLocationEndpoint::class,
+        WHEREAMI_INFO_NAME
+    )
+    fun provideWhereAmISpec(): InformationPluginSpec = InformationPluginSpec
 }

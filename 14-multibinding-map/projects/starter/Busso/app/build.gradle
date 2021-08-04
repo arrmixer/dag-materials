@@ -60,6 +60,9 @@ dependencies {
   // Dagger dependencies
   implementation "com.google.dagger:dagger:$dagger_version"
   kapt "com.google.dagger:dagger-compiler:$dagger_version"
+  implementation "com.google.auto.value:auto-value-annotations:$autovalue_annotation_version"
+  kapt "com.google.auto.value:auto-value:$autovalue_version"
+
 
   // Location Rx implementation
   implementation project(path: ':libs:location:rx')

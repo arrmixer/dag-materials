@@ -60,29 +60,31 @@ class InformationPluginPresenterImpl @Inject constructor(
 
   private val disposables = CompositeDisposable()
 
-  override fun start() {
-    disposables.add(
-        locationObservable.filter(::isLocationEvent)
-            .map { locationEvent ->
-              locationEvent as LocationData
-            }
-            .firstElement()
-            .map { locationData ->
-              val res = informationPluginRegistry.plugins().map { spec ->
-                spec.informationEndpoint.fetchInformation(locationData.location)
-                    .toFlowable()
-              }
-              Flowable
-                  .merge(res)
-                  .collectInto(mutableListOf<String>()) { acc, item ->
-                    acc.add(item.message)
-                  }
-            }
-            .subscribe(::manageResult, ::handleError)
-    )
-  }
+    override fun start() {
+        disposables.add(
+            locationObservable.filter(::isLocationEvent)
+                .map { locationEvent ->
+                    locationEvent as LocationData
+                }
+                .firstElement()
+                .map { locationData ->
+                    val res = informationPluginRegistry.plugins().map { endpoint ->
+                        val location = locationData.location
+                        endpoint.fetchInformation(location.latitude, location.longitude) // HERE
+                            .toFlowable()
+                    }
+                    Flowable
+                        .merge(res)
+                        .collectInto(mutableListOf<String>()) { acc, item ->
+                            acc.add(item.message)
+                        }
+                }
+                .subscribe(::manageResult, ::handleError)
+        )
+    }
 
-  fun manageResult(single: Single<MutableList<String>>) {
+
+    fun manageResult(single: Single<MutableList<String>>) {
     useViewBinder {
       single
           .subscribeOn(Schedulers.io())

@@ -32,8 +32,12 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.busso.plugins.wether.endpoint
+package com.raywenderlich.android.busso.plugins.api
 
-import com.raywenderlich.android.busso.plugins.api.InformationEndpoint
+import dagger.MapKey
+import kotlin.reflect.KClass
 
-interface WeatherInformationEndpoint : InformationEndpoint
+@MapKey // 1
+annotation class SimpleInfoKey(
+    val endpointClass: KClass<*> // 2
+)

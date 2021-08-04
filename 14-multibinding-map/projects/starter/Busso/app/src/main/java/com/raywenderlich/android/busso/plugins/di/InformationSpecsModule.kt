@@ -51,18 +51,4 @@ import javax.inject.Named
       WeatherModule::class
     ]
 )
-object InformationSpecsModule {
-
-  @Provides
-  @ElementsIntoSet // 1
-  @ApplicationScope
-  fun provideWeatherSpec(
-      @Named(WHEREAMI_INFO_NAME) whereAmISpec: InformationPluginSpec, // 2
-      @Named(WEATHER_INFO_NAME) weatherSpec: InformationPluginSpec // 2
-  ): Set<InformationPluginSpec> { // 3
-    return mutableSetOf<InformationPluginSpec>().apply {
-      add(whereAmISpec)
-      add(weatherSpec)
-    }
-  }
-}
+object InformationSpecsModule
