@@ -46,12 +46,6 @@ class Main : Application() {
 
   lateinit var appComponent: ApplicationComponent
 
-  @Inject
-  lateinit var informationPluginRegistry: InformationPluginRegistry
-
-  @Inject
-  lateinit var whereAmISpec: InformationPluginSpec
-
   override fun onCreate() {
     super.onCreate()
     // 3
@@ -60,7 +54,6 @@ class Main : Application() {
         .create(this).apply {
           inject(this@Main)
         }
-    informationPluginRegistry.register(whereAmISpec)
   }
 }
 

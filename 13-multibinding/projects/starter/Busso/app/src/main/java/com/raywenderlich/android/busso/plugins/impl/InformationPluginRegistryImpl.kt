@@ -41,13 +41,10 @@ import javax.inject.Inject
 
 /** Implementation for the InformationPluginRegistry */
 @ApplicationScope
-class InformationPluginRegistryImpl @Inject constructor() : InformationPluginRegistry {
+class InformationPluginRegistryImpl @Inject constructor(
+  private val informationPlugins: @JvmSuppressWildcards Set<InformationPluginSpec> // 1
+) : InformationPluginRegistry {
 
-  private val plugins = mutableListOf<InformationPluginSpec>()
-
-  override fun register(spec: InformationPluginSpec) {
-    plugins.add(spec)
-  }
-
-  override fun plugins(): List<InformationPluginSpec> = plugins
+  // 2
+  override fun plugins(): List<InformationPluginSpec> = informationPlugins.toList() // 3
 }

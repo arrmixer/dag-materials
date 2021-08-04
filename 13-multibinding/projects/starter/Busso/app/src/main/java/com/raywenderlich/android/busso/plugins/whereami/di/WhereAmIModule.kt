@@ -36,14 +36,20 @@ package com.raywenderlich.android.busso.plugins.whereami.di
 
 import com.raywenderlich.android.busso.di.scopes.ApplicationScope
 import com.raywenderlich.android.busso.plugins.api.InformationEndpoint
+import com.raywenderlich.android.busso.plugins.api.InformationPluginRegistry
 import com.raywenderlich.android.busso.plugins.api.InformationPluginSpec
+import com.raywenderlich.android.busso.plugins.impl.InformationPluginRegistryImpl
 import com.raywenderlich.android.busso.plugins.whereami.endpoint.MyLocationEndpoint
 import com.raywenderlich.android.busso.plugins.whereami.endpoint.WhereAmIEndpoint
 import com.raywenderlich.android.busso.plugins.whereami.endpoint.WhereAmIEndpointImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.multibindings.IntoSet
 import retrofit2.Retrofit
+import javax.inject.Named
+
+const val WHEREAMI_INFO_NAME = "WhereAmI" // 1
 
 @Module(includes = [WhereAmIModule.Bindings::class])
 object WhereAmIModule {
@@ -56,12 +62,12 @@ object WhereAmIModule {
 
   @Provides
   @ApplicationScope
+  @Named(WHEREAMI_INFO_NAME)
   fun provideWhereAmISpec(endpoint: WhereAmIEndpointImpl): InformationPluginSpec = object : InformationPluginSpec {
     override val informationEndpoint: InformationEndpoint
       get() = endpoint
     override val serviceName: String
       get() = "WhereAmI"
-
   }
 
   @Module
