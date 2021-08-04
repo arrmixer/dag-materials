@@ -39,6 +39,7 @@ import com.raywenderlich.android.busso.Main
 import com.raywenderlich.android.busso.plugins.di.InformationPluginModule
 import com.raywenderlich.android.busso.plugins.di.InformationSpecsModule
 import com.raywenderlich.android.di.scopes.ApplicationScope
+import com.raywenderlich.android.networking.NetworkingConfiguration
 import dagger.BindsInstance
 import dagger.Component
 
@@ -47,7 +48,8 @@ import dagger.Component
     ApplicationModule::class,
     InformationPluginModule.ApplicationBindings::class,
     InformationSpecsModule::class
-  ]
+  ],
+  dependencies = [NetworkingConfiguration::class]
 )
 @ApplicationScope
 interface ApplicationComponent {
@@ -59,6 +61,9 @@ interface ApplicationComponent {
   @Component.Factory
   interface Factory {
 
-    fun create(@BindsInstance application: Application): ApplicationComponent
+    fun create(
+      @BindsInstance application: Application,
+      networkingConfiguration: NetworkingConfiguration
+    ): ApplicationComponent
   }
 }

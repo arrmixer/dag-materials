@@ -36,6 +36,7 @@ package com.raywenderlich.android.busso
 
 import android.app.Application
 import android.content.Context
+import com.raywenderlich.android.busso.conf.BussoConfiguration
 import com.raywenderlich.android.busso.di.ApplicationComponent
 import com.raywenderlich.android.busso.di.DaggerApplicationComponent
 
@@ -47,7 +48,7 @@ class Main : Application() {
     super.onCreate()
     appComponent = DaggerApplicationComponent
       .factory()
-      .create(this)
+      .create(this, BussoConfiguration)
   }
 }
 

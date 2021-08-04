@@ -41,29 +41,25 @@ import com.raywenderlich.android.busso.ui.view.splash.SplashPresenter
 import com.raywenderlich.android.busso.ui.view.splash.SplashPresenterImpl
 import com.raywenderlich.android.busso.ui.view.splash.SplashViewBinder
 import com.raywenderlich.android.busso.ui.view.splash.SplashViewBinderImpl
-import com.raywenderlich.android.di.scopes.ActivityScope
-import com.raywenderlich.android.ui.navigation.Navigator
-import com.raywenderlich.android.ui.navigation.NavigatorImpl
+import com.raywenderlich.android.ui.navigation.di.NavigationModule
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 
-@Module(includes = [ActivityModule.Bindings::class])
-class ActivityModule {
+@Module(
+  includes = [
+    NavigationModule::class // 1
+  ]
+)
+interface ActivityModule { // 2
 
-  @Module
-  interface Bindings {
-    @Binds
-    fun bindSplashPresenter(impl: SplashPresenterImpl): SplashPresenter
+  @Binds
+  fun bindSplashPresenter(impl: SplashPresenterImpl): SplashPresenter
 
-    @Binds
-    fun bindSplashViewBinder(impl: SplashViewBinderImpl): SplashViewBinder
+  @Binds
+  fun bindSplashViewBinder(impl: SplashViewBinderImpl): SplashViewBinder
 
-    @Binds
-    fun bindMainPresenter(impl: MainPresenterImpl): MainPresenter
-  }
-
-  @Provides
-  @ActivityScope
-  fun provideNavigator(activity: Activity): Navigator = NavigatorImpl(activity)
+  @Binds
+  fun bindMainPresenter(impl: MainPresenterImpl): MainPresenter
 }
+
