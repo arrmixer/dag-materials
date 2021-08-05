@@ -58,6 +58,10 @@ dependencies {
   implementation "com.google.dagger:hilt-android:$hilt_version"
   kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
+  // ViewModel Hilt support
+  implementation "androidx.hilt:hilt-lifecycle-viewmodel:$viewmodel_hilt_version" // 1
+  kapt "androidx.hilt:hilt-compiler:$viewmodel_hilt_version"
+
   // Coroutines
   implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewmodel_ktx_version"
 

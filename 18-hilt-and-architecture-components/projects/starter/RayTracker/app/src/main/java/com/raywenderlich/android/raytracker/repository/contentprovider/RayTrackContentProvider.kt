@@ -45,12 +45,23 @@ import com.raywenderlich.android.raytracker.conf.Config
 import com.raywenderlich.android.raytracker.repository.dao.TrackDao
 import com.raywenderlich.android.raytracker.repository.db.TrackDatabase
 import com.raywenderlich.android.raytracker.repository.util.toTrackData
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ApplicationComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.CoroutineContext
 
 class RayTrackContentProvider : ContentProvider(), CoroutineScope {
+
+  @EntryPoint // 1
+  @InstallIn(ApplicationComponent::class) // 2
+  interface ContentProviderEntryPoint {
+
+    fun trackDatabase(): TrackDatabase // 3
+  }
 
   companion object {
     private const val TRACK_DIR_INDICATOR = 1
@@ -123,12 +134,15 @@ class RayTrackContentProvider : ContentProvider(), CoroutineScope {
     throw UnsupportedOperationException("You don't need to update")
   }
 
-  private fun getRoomDatabase(): TrackDatabase =
-      Room.databaseBuilder(
-          context!!,
-          TrackDatabase::class.java,
-          Config.DB.DB_NAME
-      ).fallbackToDestructiveMigration().build()
+  private fun getRoomDatabase(): TrackDatabase {
+    val appContext = context?.applicationContext ?: throw IllegalStateException() // 1
+    val hiltEntryPoint =
+      EntryPointAccessors.fromApplication( // 2
+        appContext,
+        ContentProviderEntryPoint::class.java) // 3
+    return hiltEntryPoint.trackDatabase() // 4
+  }
+
 
   override val coroutineContext: CoroutineContext
     get() = Dispatchers.IO

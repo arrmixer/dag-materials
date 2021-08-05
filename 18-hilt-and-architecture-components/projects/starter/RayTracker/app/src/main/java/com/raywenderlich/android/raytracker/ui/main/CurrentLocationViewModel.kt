@@ -35,6 +35,7 @@
 package com.raywenderlich.android.raytracker.ui.main
 
 import android.app.Application
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -47,7 +48,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /** The ViewModel for the MainActivity */
 @ExperimentalCoroutinesApi
-class CurrentLocationViewModel(
+class CurrentLocationViewModel @ViewModelInject constructor(
     application: Application,
     private val trackerStateManager: TrackerStateManager,
     private val trackDataHelper: TrackDataHelper

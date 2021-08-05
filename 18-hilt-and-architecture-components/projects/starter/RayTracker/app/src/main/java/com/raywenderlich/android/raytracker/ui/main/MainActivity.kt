@@ -36,10 +36,13 @@ package com.raywenderlich.android.raytracker.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.raywenderlich.android.raytracker.R
+import com.raywenderlich.android.raytracker.di.custom.TrackRunningComponentManager
+import com.raywenderlich.android.raytracker.logging.HiltLoggerEntryPoint
 import com.raywenderlich.android.raytracker.notification.createNotificationChannel
 import com.raywenderlich.android.raytracker.repository.contentprovider.TrackDataHelperImpl
 import com.raywenderlich.android.raytracker.repository.entity.TrackData
@@ -47,6 +50,7 @@ import com.raywenderlich.android.raytracker.service.TrackingService
 import com.raywenderlich.android.raytracker.state.TrackerRunning
 import com.raywenderlich.android.raytracker.state.TrackerState
 import com.raywenderlich.android.raytracker.state.TrackerStateManager
+import dagger.hilt.EntryPoints
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -55,10 +59,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-  @Inject
-  lateinit var trackerStateManager: TrackerStateManager
+  val locationViewModel: CurrentLocationViewModel by viewModels()
 
-  lateinit var locationViewModel: CurrentLocationViewModel
+  @Inject
+  lateinit var trackRunningComponentManager: TrackRunningComponentManager // 1
 
   private lateinit var trackListAdapter: TrackListAdapter
   private lateinit var trackDataRecyclerView: RecyclerView
@@ -67,11 +71,6 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    locationViewModel = CurrentLocationViewModel(
-        this.application,
-        trackerStateManager,
-        TrackDataHelperImpl(this)
-    )
     createNotificationChannel()
     startStopButton = findViewById(R.id.startStopTrackingButton)
     trackDataRecyclerView = findViewById(R.id.location_recyclerview)
@@ -101,11 +100,20 @@ class MainActivity : AppCompatActivity() {
   private fun handleButtonState(newState: TrackerState?) {
     with(startStopButton) {
       if (newState is TrackerRunning) {
+        with(trackRunningComponentManager) {
+          startWith(System.currentTimeMillis())
+          with(newState.location) {
+            EntryPoints.get( // HERE
+              trackRunningComponent, HiltLoggerEntryPoint::class.java
+            ).logger().log("Lat: $latitude Long: $longitude")
+          }
+        }
         text = getString(R.string.stop_tracking)
         setOnClickListener {
           stopService(Intent(this@MainActivity, TrackingService::class.java))
         }
       } else {
+        trackRunningComponentManager.stop() // 3
         text = getString(R.string.start_tracking)
         setOnClickListener {
           startService(Intent(this@MainActivity, TrackingService::class.java))
@@ -121,5 +129,10 @@ class MainActivity : AppCompatActivity() {
       layoutManager = viewManager
       adapter = trackListAdapter
     }
+  }
+
+  override fun onStop() {
+    super.onStop()
+    trackRunningComponentManager.stop() // 3
   }
 }
