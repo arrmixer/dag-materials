@@ -16,8 +16,7 @@ android {
     targetSdkVersion 30
     versionCode 1
     versionName "1.0"
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
+    testInstrumentationRunner "com.raywenderlich.android.randomfunnumber.runner.HiltTestRunner"
   }
 
   sourceSets {
@@ -97,6 +96,14 @@ dependencies {
   testImplementation "androidx.test.ext:junit:$junit_ext_version"
   testImplementation "org.robolectric:robolectric:$robolectric_version"
   testImplementation "androidx.arch.core:core-testing:$arch_core_version"
+
+  // Hilt for Robolectric tests.
+  testImplementation "com.google.dagger:hilt-android-testing:$hilt_version" // 1
+  kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version" // 2
+
+  // Hilt for instrumented tests.
+  androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version" // 1
+  kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version" // 2
 
   // Dependencies for Scenarios
   debugImplementation "androidx.fragment:fragment-testing:$fragment_testing_version"
