@@ -41,9 +41,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.raywenderlich.android.busso.R
-import com.raywenderlich.android.busso.ui.view.main.activityComp
 import com.raywenderlich.android.plugins.engine.ui.InformationPluginPresenter
 import com.raywenderlich.android.plugins.engine.ui.InformationPluginViewBinder
+import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 /**
@@ -64,9 +66,7 @@ class BusStopFragment : Fragment() {
   lateinit var informationPresenter: InformationPluginPresenter
 
   override fun onAttach(context: Context) {
-    context.activityComp
-      .fragmentComponent()
-      .inject(this)
+    AndroidSupportInjection.inject(this)
     super.onAttach(context)
   }
 

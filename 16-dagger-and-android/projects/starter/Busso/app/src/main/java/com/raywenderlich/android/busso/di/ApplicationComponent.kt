@@ -42,6 +42,7 @@ import com.raywenderlich.android.network.NetworkingConfiguration
 import com.raywenderlich.android.plugins.engine.di.InformationPluginEngineModule
 import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjector
 
 @Component(
   dependencies = [NetworkingConfiguration::class],
@@ -52,11 +53,7 @@ import dagger.Component
   ]
 )
 @ApplicationScope
-interface ApplicationComponent {
-
-  fun activityComponentBuilder(): ActivityComponent.Builder
-
-  fun inject(main: Main)
+interface ApplicationComponent : AndroidInjector<Main> {
 
   @Component.Factory
   interface Factory {
