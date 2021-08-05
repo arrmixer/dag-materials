@@ -38,29 +38,54 @@ import android.app.Application
 import android.content.Context
 import android.location.LocationManager
 import com.raywenderlich.android.location.permission.GeoLocationPermissionCheckerImpl
-import com.raywenderlich.android.di.scopes.ApplicationScope
 import com.raywenderlich.android.location.api.model.LocationEvent
 import com.raywenderlich.android.location.api.permissions.GeoLocationPermissionChecker
 import com.raywenderlich.android.location.rx.provideRxLocationObservable
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityScoped
 import io.reactivex.Observable
+import javax.inject.Singleton
 
 @Module
+// 1
 class LocationModule {
-  @ApplicationScope
-  @Provides
-  fun provideLocationManager(application: Application): LocationManager =
-    application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-  @ApplicationScope
-  @Provides
-  fun providePermissionChecker(application: Application): GeoLocationPermissionChecker =
-    GeoLocationPermissionCheckerImpl(application)
+  @Module
+  object ApplicationBindings { // 2
+    @Singleton
+    @Provides
+    fun provideLocationManager(
+      @ApplicationContext context: Context
+    ): LocationManager =
+      context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+  }
 
-  @Provides
-  fun provideLocationObservable(
-    locationManager: LocationManager,
-    permissionChecker: GeoLocationPermissionChecker
-  ): Observable<LocationEvent> = provideRxLocationObservable(locationManager, permissionChecker)
+  @Module
+  object ActivityBindings { // 3
+    @ActivityScoped // 4
+    @Provides
+    fun providePermissionChecker(
+      @ActivityContext context: Context // 5
+    ): GeoLocationPermissionChecker =
+      GeoLocationPermissionCheckerImpl(context)
+
+    @Provides
+    @ActivityScoped // 4
+    fun provideLocationObservable(
+      locationManager: LocationManager,
+      permissionChecker: GeoLocationPermissionChecker
+    ): Observable<LocationEvent> = provideRxLocationObservable(locationManager, permissionChecker)
+  }
 }
+
+/*
+1. LocationModule is not a @Module anymore — it’s just a container for a few other @Modules for bindings with different scopes.
+2. ApplicationBindings is a @Module that contains the bindings with @ApplicationScoped or @Singleton.
+3. ActivityBindings is the @Module containing the bindings with @ActivityScoped.
+4. You now use @ActivityScoped for the GeoLocationPermissionChecker and Observable<LocationEvent>,
+  whose optimal lifecycle is the same as Activity.
+5. Use @ActivityContext to tell Dagger that the Context you require for GeoLocationPermissionChecker is Activity.
+*/

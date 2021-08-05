@@ -39,6 +39,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.raywenderlich.android.busso.R
 import dagger.android.AndroidInjection
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -46,6 +47,7 @@ import javax.inject.Inject
  * opens up in fullscreen mode. Once launched it waits for 2 seconds after which it opens the
  * MainActivity
  */
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
 
   @Inject
@@ -55,7 +57,6 @@ class SplashActivity : AppCompatActivity() {
   lateinit var splashPresenter: SplashPresenter
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    AndroidInjection.inject(this)
     super.onCreate(savedInstanceState)
     makeFullScreen()
     setContentView(R.layout.activity_splash)

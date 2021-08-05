@@ -34,16 +34,28 @@
 
 package com.raywenderlich.android.busso.di
 
+import com.raywenderlich.android.busso.conf.BussoConfiguration
 import com.raywenderlich.android.busso.network.NetworkModule
 import com.raywenderlich.android.location.di.LocationModule
+import com.raywenderlich.android.network.NetworkingConfiguration
+import com.raywenderlich.android.plugins.engine.di.InformationPluginEngineModule
 import dagger.Module
+import dagger.Provides
 import dagger.android.support.AndroidSupportInjectionModule
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 
 @Module(
   includes = [
-    LocationModule::class,
+    LocationModule.ApplicationBindings::class,
     NetworkModule::class,
-    AndroidSupportInjectionModule::class
+    InformationPluginEngineModule::class
   ]
 )
-object ApplicationModule
+
+@InstallIn(ApplicationComponent::class)
+object ApplicationModule {
+  @Provides
+  fun provideNetworkingConfiguration(): NetworkingConfiguration =  // HERE
+    BussoConfiguration
+}
